@@ -91,7 +91,7 @@ def upload_form():
 
                     <form role="form" class="form-horizontal" action="/" method="post" enctype="multipart/form-data">
 		    <div class="form-group">
-                      <label for="frameworkKey">Framework-key</label>		                    
+                      <label for="frameworkKey">Column name containing the key values</label>		                    
                       <input type="text" class="form-control" name="framework_key" />
                     </div>
                     <div class="form-group">
@@ -136,7 +136,7 @@ def do_upload():
 	# Fetch corresponding framework metadata
         gdas_framework = root.append(get_dataset_meta(framework_uri))
         gdas_dataset = etree.SubElement(root[0], "Dataset")
-
+        #gdas_dataset.append(etree.XML("""
         etree.SubElement(gdas_dataset, "DatasetURI").text = (cfg['gdas_uri_prefix'] + 
             str(uuid.uuid4()) + '/' + name)
         etree.SubElement(gdas_dataset, "Title").text = name
@@ -150,7 +150,7 @@ def do_upload():
         gdas_rowset = etree.SubElement(gdas_dataset, "Rowset")
 
         # Use codecs to get a string object instead of bytes
-        # latin1 works, but... 
+        # latin1 works, but...
         reader = csv.DictReader(codecs.iterdecode(upload.file, 'latin1'), delimiter=cfg['csv_delimiter'])
         key_length = []
         #items = OrderedDict because order is pretty important
@@ -248,7 +248,7 @@ def do_upload():
 
                     <form role="form" class="form-horizontal" action="/" method="post" enctype="multipart/form-data">
             <div class="form-group">
-                      <label for="frameworkKey">Framework-key</label>                           
+                      <label for="frameworkKey">Column name containing the key values</label>                           
                       <input type="text" class="form-control" name="framework_key" />
                     </div>
                     <div class="form-group">
@@ -266,6 +266,8 @@ def do_upload():
                     <div id="map" class="map" data-wms-url='""" + str(resp['url']) + "' data-wms-layer='" + \
                     str(resp['layer']) + """'>
                     </div>
+                    <div><p><strong>wms_url: </strong>""" + str(resp['url']) + ", <strong>wms_layer: </strong>" + str(resp['layer']) + """</p>
+                    <p><strong>gdas_url: </strong>""" + gdas_url + """</p></div>
 
                 </div>
             </div>
