@@ -1,0 +1,8 @@
+{
+	"demonstrator_host": "127.0.0.1",
+	"demonstrator_port": "8080",
+	"demonstrator_baseurl": "http://yourserver.domain",
+	"tjs_baseurl": "http://your_tjs_server.com/tjs?",
+	"gdas_uri_prefix": "http://your_prefix.com/value",
+	"csv_delimiter": ";"
+}
