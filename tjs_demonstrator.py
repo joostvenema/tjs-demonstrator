@@ -74,7 +74,7 @@ def upload_form():
     <html>
         <head>
             <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-            <link rel="stylesheet" href="http://ol3js.org/en/master/build/ol.css" type="text/css">
+            <link rel="stylesheet" href="js/ol.css" type="text/css">
             <style>
                 .map {
                     height: 400px;
@@ -86,8 +86,8 @@ def upload_form():
         <body>
             <div class="container">
                 <div class="row">
-		<div class="col-md-4">
-                <h1>TJS Demonstrator <small>v0.1</small></h1><br><br>
+		<div class="col-md-5">
+                <h1>TJS Demonstrator <small>v0.1.1</small></h1><br><br>
 
                     <form role="form" class="form-horizontal" action="/" method="post" enctype="multipart/form-data">
 		    <div class="form-group">
@@ -105,7 +105,7 @@ def upload_form():
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7" style="margin-top: 20px;">
                     <div id="map" class="map">
                     </div>
                 </div>
@@ -113,7 +113,7 @@ def upload_form():
         </div>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/1.1.0/proj4js-compressed.js"></script>
-<script src="http://ol3js.org/en/master/build/ol.js" type="text/javascript"></script>
+<script src="js/ol.js" type="text/javascript"></script>
 <script src="js/tjs.js"></script>
 </body>
 <html>"""
@@ -231,7 +231,7 @@ def do_upload():
     <html>
         <head>
             <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-            <link rel="stylesheet" href="http://ol3js.org/en/master/build/ol.css" type="text/css">
+            <link rel="stylesheet" href="js/ol.css" type="text/css">
             <style>
                 .map {
                     height: 400px;
@@ -243,8 +243,8 @@ def do_upload():
         <body>
             <div class="container">
                 <div class="row">
-        <div class="col-md-4">
-                <h1>TJS Demonstrator <small>v0.1</small></h1><br><br>
+        <div class="col-md-5">
+                <h1>TJS Demonstrator <small>v0.1.1</small></h1><br><br>
 
                     <form role="form" class="form-horizontal" action="/" method="post" enctype="multipart/form-data">
             <div class="form-group">
@@ -262,7 +262,7 @@ def do_upload():
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7" style="margin-top: 20px;">
                     <div id="map" class="map" data-wms-url='""" + str(resp['url']) + "' data-wms-layer='" + \
                     str(resp['layer']) + """'>
                     </div>
@@ -277,7 +277,7 @@ def do_upload():
         </div>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/1.1.0/proj4js-compressed.js"></script>
-<script src="http://ol3js.org/en/master/build/ol.js" type="text/javascript"></script>
+<script src="js/ol.js" type="text/javascript"></script>
 <script src="js/tjs.js"></script>
 </body>
 <html>"""
