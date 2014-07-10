@@ -16,7 +16,7 @@ TJS stands for Table Joining Service, read more about it here: http://www.openge
 * [lxml](http://lxml.de/)
 * [Bottle](http://bottlepy.org/docs/dev/index.html)
 * [Waitress](https://github.com/Pylons/waitress)
-* 
+
 ### Configuration
 
 Edit config.json. The following settings are required:
