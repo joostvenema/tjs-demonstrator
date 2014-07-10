@@ -13,6 +13,7 @@ import uuid
 import json
 import urllib.request
 import urllib.parse
+import requests
 from lxml import etree, objectify
 
 app = Bottle()
@@ -54,11 +55,14 @@ def joindata(framework_uri, gdas_url):
     y = urllib.request.urlopen(url)
     xml = etree.parse(y)
     y.close()
-    #xml.findall(".//a[@x]")[0]
-    wms_url = xml.findtext(".//{http://www.opengis.net/tjs}URL")
-    wms_layer = xml.findtext(".//{http://www.opengis.net/tjs}Parameter[@name='layerName']")
 
-    return {'url': wms_url, 'layer': wms_layer}
+    ## Get urls + layers for WMS, WFS -- This is very hacky code
+    wms_url = xml.findall(".//{http://www.opengis.net/tjs}URL")[0].text
+    wfs_url = xml.findall(".//{http://www.opengis.net/tjs}URL")[1].text
+    wms_layer = xml.findtext(".//{http://www.opengis.net/tjs}Parameter[@name='layers']") 
+    wfs_layer = xml.findtext(".//{http://www.opengis.net/tjs}Parameter[@name='typeName']")
+
+    return {'wms_url': wms_url, 'wms_layer': wms_layer, 'wfs_url': wfs_url, 'wfs_layer': wfs_layer}
 
 @app.route('/js/<filename:path>')
 def send_static(filename):
@@ -67,6 +71,10 @@ def send_static(filename):
 @app.route('/xml/<filename:path>')
 def send_static(filename):
     return static_file(filename, root='xml')
+
+@app.route('/static/<filename:path>')
+def send_static(filename):
+    return static_file(filename, root='static')
 
 @app.route('/', method='GET')
 def upload_form():
@@ -98,7 +106,9 @@ def upload_form():
                       <label for="uploadFile">Select a file</label>
                       <input type="file" name="upload" />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"><!--
+                      <label for="selectFramework">Or select a SDMX dataset</label>
+                      <select class="form-control" id="selectDataflow" name="framework_uri"></select>-->
                       <label for="selectFramework">Select Framework</label>
                       <select class="form-control" id="selectFramework" name="framework_uri"></select>
                     </div>                  
@@ -255,7 +265,9 @@ def do_upload():
                       <label for="uploadFile">Select a file</label>
                       <input type="file" name="upload" />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"><!--
+                      <label for="selectFramework">Or select a SDMX dataset</label>
+                      <select class="form-control" id="selectDataflow" name="framework_uri"></select>-->
                       <label for="selectFramework">Select Framework</label>
                       <select class="form-control" id="selectFramework" name="framework_uri"></select>
                     </div>                  
@@ -263,10 +275,11 @@ def do_upload():
                 </form>
                 </div>
                 <div class="col-md-7" style="margin-top: 20px;">
-                    <div id="map" class="map" data-wms-url='""" + str(resp['url']) + "' data-wms-layer='" + \
-                    str(resp['layer']) + """'>
+                    <div id="map" class="map" data-wms-url='""" + str(resp['wms_url']) + "' data-wms-layer='" + \
+                    str(resp['wms_layer']) + """'>
                     </div>
-                    <div><p><strong>wms_url: </strong>""" + str(resp['url']) + ", <strong>wms_layer: </strong>" + str(resp['layer']) + """</p>
+                    <div><p><strong>wms_url: </strong>""" + str(resp['wms_url']) + ", <br><strong>wms_layer: </strong>" + str(resp['wms_layer']) + """</p>
+                    <div><p><strong>wfs_url: </strong>""" + str(resp['wfs_url']) + ", <br><strong>wfs_layer: </strong>" + str(resp['wfs_layer']) + """</p>
                     <p><strong>gdas_url: </strong>""" + gdas_url + """</p></div>
 
                 </div>
@@ -299,6 +312,41 @@ def reverse_tjs():
 
     except:
         return "That didn't work out that well..."
+
+@app.route('/sdmx/datasets')
+def reverse_sdmx():
+
+    url = 'http://www.ec.europa.eu/eurostat/SDMX/diss-web/rest/dataflow/ESTAT/all/latest'
+
+    # Fetch data
+    try:
+        y = urllib.request.urlopen(url)
+        data = y.read()
+        y.close()
+
+        # force xml header
+        response.content_type = 'text/xml'
+        return data
+
+    except:
+        return "That didn't work out that well..."
+
+@app.route('/sdmx/datastructure/<dsd>')
+def reverse_sdmx(dsd):
+
+    url = 'http://ec.europa.eu/eurostat/SDMX/diss-web/rest/datastructure/ESTAT/DSD_' + dsd
+
+    # Fetch data
+    try:
+        req = requests.get(url)
+
+        response.content_type = 'text/xml'
+        return req
+
+    except Exception as e:
+        return e.read() 
+    #except Exception as e:
+     #   return e
 
 # Use waitress to support multi-threading
 run(app, host=cfg['demonstrator_host'], port=cfg['demonstrator_port'], reloader=True, server='waitress')
